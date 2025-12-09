@@ -1,0 +1,45 @@
+name: snapshot
+on:
+  push:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: snapshot-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish-snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java 8
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 8
+          cache: gradle
+
+      - name: Read Gradle version
+        id: vars
+        run: |
+          VERSION=$(./gradlew -q properties | awk '/^version:/ {print $2}')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Check if SNAPSHOT version
+        if: ${{ !endsWith(steps.vars.outputs.version, '-SNAPSHOT') }}
+        run: |
+          echo "Current version (${{ steps.vars.outputs.version }}) is not -SNAPSHOT; skipping snapshot publish."
+          exit 0
+
+      - name: Publish SNAPSHOT to Central Portal
+        if: ${{ endsWith(steps.vars.outputs.version, '-SNAPSHOT') }}
+        run: ./gradlew clean publish --stacktrace
+        env:
+          SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+          PUBLISH_SIGNING_KEY: ${{ secrets.PUBLISH_SIGNING_KEY }}
+          PUBLISH_SIGNING_PASSWORD: ${{ secrets.PUBLISH_SIGNING_PASSWORD }}

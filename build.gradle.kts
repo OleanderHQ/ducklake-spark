@@ -3,10 +3,14 @@ plugins {
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("io.freefair.lombok") version "8.10.2"
     id("com.diffplug.spotless") version "6.25.0"
+    id("maven-publish")
+    id("signing")
+    id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
 }
 
 group = "dev.oleander"
 version = "0.1.0-SNAPSHOT"
+description = "SparkCatalog implementation for Ducklake open table format"
 
 val scalaBinary: String = providers.gradleProperty("scalaBinary").orElse("2.12").get()
 val sparkVersion: String = providers.gradleProperty("sparkVersion").orElse("3.5.5").get()
@@ -32,6 +36,8 @@ dependencies {
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
+    withSourcesJar()
+    withJavadocJar()
 }
 
 spotless {
@@ -71,4 +77,58 @@ tasks.shadowJar {
 
 tasks.assemble {
     dependsOn(tasks.shadowJar)
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            from(components["java"])
+            artifact(tasks.shadowJar)
+
+            pom {
+                name.set("ducklake-spark")
+                description.set(project.description)
+                url.set("https://github.com/OleanderHQ/ducklake-spark")
+
+                licenses {
+                    license {
+                        name.set("Apache License, Version 2.0")
+                        url.set("https://www.apache.org/licenses/LICENSE-2.0")
+                    }
+                }
+
+                developers {
+                    developer {
+                        id.set("oleander")
+                        name.set("Oleander Team")
+                    }
+                }
+
+                scm {
+                    url.set("https://github.com/OleanderHQ/ducklake-spark")
+                    connection.set("scm:git:https://github.com/OleanderHQ/ducklake-spark.git")
+                    developerConnection.set("scm:git:git@github.com:OleanderHQ/ducklake-spark.git")
+                }
+            }
+        }
+    }
+}
+
+signing {
+    useInMemoryPgpKeys(
+        System.getenv("PUBLISH_SIGNING_KEY"),
+        System.getenv("PUBLISH_SIGNING_PASSWORD")
+    )
+    sign(publishing.publications["mavenJava"])
+}
+
+nexusPublishing {
+    repositories {
+        sonatype {
+            nexusUrl.set(uri("https://ossrh-staging-api.central.sonatype.com/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://central.sonatype.com/repository/maven-snapshots/"))
+            username.set(System.getenv("SONATYPE_USERNAME"))
+            password.set(System.getenv("SONATYPE_PASSWORD"))
+        }
+    }
 }
