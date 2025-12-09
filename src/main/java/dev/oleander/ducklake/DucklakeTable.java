@@ -13,7 +13,7 @@ import org.apache.spark.sql.types.StructType;
 import org.apache.spark.sql.util.CaseInsensitiveStringMap;
 import org.jdbi.v3.core.Jdbi;
 
-import dev.oleander.ducklake.s3.Credentials;
+import dev.oleander.ducklake.credentials.Credentials;
 
 public class DucklakeTable extends Table implements SupportsRead {
   private final Jdbi jdbi;

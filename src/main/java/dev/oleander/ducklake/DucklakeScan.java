@@ -10,9 +10,9 @@ import org.apache.spark.sql.sources.Filter;
 import org.apache.spark.sql.types.StructType;
 import org.jdbi.v3.core.Jdbi;
 
+import dev.oleander.ducklake.credentials.Credentials;
 import dev.oleander.ducklake.dao.DataFileDao;
 import dev.oleander.ducklake.models.DataFile;
-import dev.oleander.ducklake.s3.Credentials;
 
 public class DucklakeScan implements Scan, Batch {
   private final Jdbi jdbi;

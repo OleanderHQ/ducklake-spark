@@ -6,7 +6,7 @@ import org.apache.spark.sql.connector.read.PartitionReader;
 import org.apache.spark.sql.connector.read.PartitionReaderFactory;
 import org.apache.spark.sql.types.StructType;
 
-import dev.oleander.ducklake.s3.Credentials;
+import dev.oleander.ducklake.credentials.Credentials;
 
 public class DucklakePartitionReaderFactory implements PartitionReaderFactory {
   private final StructType schema;
