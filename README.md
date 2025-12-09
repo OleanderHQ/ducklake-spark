@@ -1,9 +1,9 @@
 # Ducklake Spark
 
 ## Overview
-Ducklake is an open table format. This project provides a Spark `TableCatalog` for Ducklake 
-so that Spark SQL users can query Ducklake tables without moving data. The catalog loads 
-table metadata from Ducklake's Postgres store and points Spark to the files that Ducklake 
+Ducklake is an open table format. This project provides a Spark `TableCatalog` for Ducklake
+so that Spark SQL users can query Ducklake tables without moving data. The catalog loads
+table metadata from Ducklake's Postgres store and points Spark to the files that Ducklake
 manages in object storage.
 
 ## Current Capabilities

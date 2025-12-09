@@ -21,8 +21,8 @@ import org.apache.spark.sql.types.StructField;
 import org.apache.spark.sql.types.StructType;
 import org.apache.spark.unsafe.types.UTF8String;
 
-import dev.oleander.ducklake.s3.Credentials;
-import dev.oleander.ducklake.s3.S3Credentials;
+import dev.oleander.ducklake.credentials.Credentials;
+import dev.oleander.ducklake.credentials.S3Credentials;
 
 public class DucklakePartitionReader implements PartitionReader<InternalRow> {
   private final String dataFilePath;

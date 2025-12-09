@@ -1,4 +1,4 @@
-package dev.oleander.ducklake.s3;
+package dev.oleander.ducklake.credentials;
 
 import java.io.Serializable;
 

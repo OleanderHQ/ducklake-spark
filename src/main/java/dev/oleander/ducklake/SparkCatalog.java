@@ -25,6 +25,9 @@ import org.apache.spark.sql.util.CaseInsensitiveStringMap;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.sqlobject.SqlObjectPlugin;
 
+import dev.oleander.ducklake.credentials.Credentials;
+import dev.oleander.ducklake.credentials.LocalCredentials;
+import dev.oleander.ducklake.credentials.S3Credentials;
 import dev.oleander.ducklake.dao.MetadataDao;
 import dev.oleander.ducklake.dao.SchemaDao;
 import dev.oleander.ducklake.dao.TableColumnDao;
@@ -32,9 +35,6 @@ import dev.oleander.ducklake.dao.TableDao;
 import dev.oleander.ducklake.models.Metadata;
 import dev.oleander.ducklake.models.Schema;
 import dev.oleander.ducklake.models.TableColumn;
-import dev.oleander.ducklake.s3.Credentials;
-import dev.oleander.ducklake.s3.LocalCredentials;
-import dev.oleander.ducklake.s3.S3Credentials;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
