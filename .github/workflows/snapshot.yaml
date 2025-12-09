@@ -35,9 +35,9 @@ jobs:
           echo "Current version (${{ steps.vars.outputs.version }}) is not -SNAPSHOT; skipping snapshot publish."
           exit 0
 
-      - name: Publish SNAPSHOT to Central Portal
+      - name: Publish SNAPSHOT to Sonatype
         if: ${{ endsWith(steps.vars.outputs.version, '-SNAPSHOT') }}
-        run: ./gradlew clean publish --stacktrace
+        run: ./gradlew clean publishToSonatype --stacktrace
         env:
           SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
           SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
