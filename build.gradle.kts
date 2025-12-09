@@ -82,8 +82,9 @@ tasks.assemble {
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
-            from(components["java"])
             artifact(tasks.shadowJar)
+            artifact(tasks.named<Jar>("sourcesJar"))
+            artifact(tasks.named<Jar>("javadocJar"))
 
             pom {
                 name.set("ducklake-spark")
