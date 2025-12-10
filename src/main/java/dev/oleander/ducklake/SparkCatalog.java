@@ -133,7 +133,7 @@ public class SparkCatalog implements TableCatalog, SupportsNamespaces {
 
   @Override
   public boolean namespaceExists(String[] namespace) {
-    return true;
+    return schemaDao.getSchema(String.join(".", namespace)).isPresent();
   }
 
   @Override
