@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "dev.oleander"
-version = "0.1.0"
+version = "0.1.1-SNAPSHOT"
 description = "SparkCatalog implementation for Ducklake open table format"
 
 val scalaBinary: String = providers.gradleProperty("scalaBinary").orElse("2.12").get()
