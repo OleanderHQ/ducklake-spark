@@ -61,7 +61,7 @@ Keep the values short and plain. This makes the setup easy for readers worldwide
 
    ```sh
    pyspark \
-     --packages dev.oleander:ducklake-spark:0.1.1 \
+     --packages dev.oleander:ducklake-spark:0.1.2 \
      --conf spark.sql.catalog.oleander=dev.oleander.ducklake.SparkCatalog \
      --conf spark.sql.catalog.oleander.postgres-host=localhost \
      --conf spark.sql.catalog.oleander.postgres-port=5432 \
