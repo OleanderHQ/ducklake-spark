@@ -9,7 +9,6 @@ import org.apache.hadoop.fs.Path;
 import org.apache.parquet.example.data.Group;
 import org.apache.parquet.hadoop.ParquetReader;
 import org.apache.parquet.hadoop.example.GroupReadSupport;
-import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.catalyst.InternalRow;
 import org.apache.spark.sql.catalyst.expressions.GenericInternalRow;
 import org.apache.spark.sql.connector.read.PartitionReader;
@@ -29,6 +28,7 @@ public class DucklakePartitionReader implements PartitionReader<InternalRow> {
   private final String deleteFilePath;
   private final StructType schema;
   private final Credentials credentials;
+  private final Configuration sparkConf;
 
   private boolean initialized;
   private ParquetReader<Group> dataReader;
@@ -39,11 +39,12 @@ public class DucklakePartitionReader implements PartitionReader<InternalRow> {
   private InternalRow currentRow;
 
   public DucklakePartitionReader(String dataFilePath, String deleteFilePath, StructType schema,
-      Credentials credentials) {
+      Credentials credentials, Configuration sparkConf) {
     this.dataFilePath = dataFilePath;
     this.deleteFilePath = deleteFilePath;
     this.schema = schema;
     this.credentials = credentials;
+    this.sparkConf = sparkConf;
   }
 
   private void initIfNeeded() throws IOException {
@@ -51,8 +52,7 @@ public class DucklakePartitionReader implements PartitionReader<InternalRow> {
       return;
     }
 
-    Configuration baseConf = SparkSession.active().sparkContext().hadoopConfiguration();
-    Configuration conf = new Configuration(baseConf);
+    Configuration conf = new Configuration(sparkConf);
 
     if (credentials instanceof S3Credentials) {
       S3Credentials s3Credentials = (S3Credentials) credentials;

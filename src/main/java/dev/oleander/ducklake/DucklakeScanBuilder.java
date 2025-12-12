@@ -1,5 +1,10 @@
 package dev.oleander.ducklake;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.hadoop.conf.Configuration;
+import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.connector.read.Scan;
 import org.apache.spark.sql.connector.read.ScanBuilder;
 import org.apache.spark.sql.connector.read.SupportsPushDownFilters;
@@ -32,8 +37,16 @@ public class DucklakeScanBuilder
 
   @Override
   public Scan build() {
+    Map<String, String> serializedConf =
+        serializeHadoopConf(SparkSession.active().sparkContext().hadoopConfiguration());
     return new DucklakeScan(jdbi, fullSchema, requiredSchema, pushedFilters, tableId, basePath,
-        credentials);
+        credentials, serializedConf);
+  }
+
+  private Map<String, String> serializeHadoopConf(Configuration conf) {
+    Map<String, String> values = new HashMap<>();
+    conf.iterator().forEachRemaining(entry -> values.put(entry.getKey(), entry.getValue()));
+    return values;
   }
 
   @Override
