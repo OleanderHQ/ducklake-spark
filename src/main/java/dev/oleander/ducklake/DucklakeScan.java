@@ -1,6 +1,7 @@
 package dev.oleander.ducklake;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.spark.sql.connector.read.Batch;
 import org.apache.spark.sql.connector.read.InputPartition;
@@ -22,9 +23,11 @@ public class DucklakeScan implements Scan, Batch {
   private final long tableId;
   private final String basePath;
   private final Credentials credentials;
+  private final Map<String, String> serializedHadoopConf;
 
   public DucklakeScan(Jdbi jdbi, StructType fullSchema, StructType requiredSchema,
-      Filter[] pushedFilters, long tableId, String basePath, Credentials credentials) {
+      Filter[] pushedFilters, long tableId, String basePath, Credentials credentials,
+      Map<String, String> serializedHadoopConf) {
     this.jdbi = jdbi;
     this.fullSchema = fullSchema;
     this.requiredSchema = requiredSchema;
@@ -32,6 +35,7 @@ public class DucklakeScan implements Scan, Batch {
     this.tableId = tableId;
     this.basePath = basePath;
     this.credentials = credentials;
+    this.serializedHadoopConf = serializedHadoopConf;
   }
 
   @Override
@@ -59,6 +63,6 @@ public class DucklakeScan implements Scan, Batch {
 
   @Override
   public PartitionReaderFactory createReaderFactory() {
-    return new DucklakePartitionReaderFactory(requiredSchema, credentials);
+    return new DucklakePartitionReaderFactory(requiredSchema, credentials, serializedHadoopConf);
   }
 }
